@@ -12,7 +12,30 @@ class App extends React.Component {
     this.state = {
       isSignedIn: false,
       route: 'signin',
+      user: {
+        id: '',
+        name: "",
+        email: "",
+        entries: 0,
+        joined: "",
+      }
     }
+  }
+
+  loadUser = (data) => {
+    console.log(">>>>>>>>>>>", data);
+    this.setState({user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            entries: data.entries,
+            joined: data.joined,
+        }}
+    );
+  }
+
+  updateEntriesForUser = (entries) => {
+    this.setState({user: {...this.state.user, entries}});
   }
 
   onRouteChange = (route) => {
@@ -24,17 +47,24 @@ class App extends React.Component {
     this.setState({route: route});
   }
 
+  componentDidMount() {
+
+    fetch('http://localhost:3100')
+      .then(resp => resp.json())
+      .then(console.log);
+  }
+
   render () {
 
-    const {isSignedIn, route} = this.state;
+    const {isSignedIn, route, user} = this.state;
 
     return(
         <div className="App">
           <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn}/>  
           {
-            (route === 'home' && <Home />) ||
-            (route === 'register' && <Register onRouteChange={this.onRouteChange} />) ||
-            (<SignIn onRouteChange={this.onRouteChange} />)
+            (route === 'home' && <Home user={user} updateEntriesForUser={this.updateEntriesForUser}/>) ||
+            (route === 'register' && <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />) ||
+            (<SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />)
           }       
         </div>
       )

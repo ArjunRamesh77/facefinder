@@ -11,15 +11,15 @@ const app = new Clarifai.App({
 
 class Home extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
           input: '',
           imageUrl: '',
           faceBoxes: [],
         }
       }
-    
+        
     calculateFaceLocation = (data) => {
         const faces = data.outputs[0].data.regions;
         const image = document.getElementById('inputImage');
@@ -50,13 +50,29 @@ class Home extends React.Component {
         this.setState({input: event.target.value});
     }
 
+    updateEntries = () => {
+        fetch('http://localhost:3100/image', {
+            method: 'put',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: this.props.user.id,
+            })
+        })
+        .then(resp => resp.json())
+        .then(entries => {
+            this.props.updateEntriesForUser(Number(entries));
+        })
+    }
+
     onSubmit = () => {
         this.setState({imageUrl: this.state.input})
         app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
             .then(
             response => {
                 this.displayFaceBox(this.calculateFaceLocation(response));
-                console.log(response);
+                this.updateEntries();
             })
             .catch(err => {
 
@@ -67,11 +83,12 @@ class Home extends React.Component {
     render() {
 
         const {faceBoxes, imageUrl} = this.state;
+        const {user} = this.props;
 
         return (
             <div> 
                 <Logo />
-                <Rank />
+                <Rank user={user}/>
                 <ImageLinkForm 
                     onInputChange={this.onInputChange} 
                     onSubmit={this.onSubmit} />
