@@ -35,6 +35,7 @@ class App extends React.Component {
   }
 
   updateEntriesForUser = (entries) => {
+    console.log("ENTRIES ===", entries);
     this.setState({user: {...this.state.user, entries}});
   }
 

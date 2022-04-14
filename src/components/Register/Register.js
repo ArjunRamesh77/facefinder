@@ -35,15 +35,20 @@ class Register extends React.Component {
                 password: this.state.password,
             })
          })
-         .then(resp => resp.json())
-         .then(user => {
-             console.log(user);
-             if (user) {
-                this.props.loadUser(user);
-                this.props.onRouteChange("home");
-             } else {
+         .then(resp => {
+             if(!resp.ok) {
                 this.setState({failToRegister: true});
+                throw new Error("HTTP error");
              }
+             return resp.json();
+            }
+         )
+         .then(user => {
+            this.props.loadUser(user);
+            this.props.onRouteChange("home");
+         })
+         .catch(err => {
+             console.log(err);
          })
     }
 

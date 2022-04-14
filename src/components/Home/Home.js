@@ -3,11 +3,6 @@ import Logo from '../Logo/Logo';
 import Rank from '../Rank/Rank';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import FaceFinder from '../FaceFinder/Facefinder';
-import Clarifai from 'clarifai';
-
-const app = new Clarifai.App({
-  apiKey: "3d050599cda24fe0bb7aca4825d91dbb"
-});
 
 class Home extends React.Component {
 
@@ -67,17 +62,26 @@ class Home extends React.Component {
     }
 
     onSubmit = () => {
+        console.log("WTCFDFFF", this.state.input);
         this.setState({imageUrl: this.state.input})
-        app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-            .then(
-            response => {
-                this.displayFaceBox(this.calculateFaceLocation(response));
-                this.updateEntries();
-            })
-            .catch(err => {
 
-            }
-        )
+        fetch('http://localhost:3100/clarifai/image', {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                url: this.state.input
+            })
+         })
+         .then(res => res.json())
+         .then(res => {
+            this.displayFaceBox(this.calculateFaceLocation(res));
+            this.updateEntries();
+        })
+        .catch(err => {
+
+        })
     }
    
     render() {
