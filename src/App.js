@@ -23,7 +23,6 @@ class App extends React.Component {
   }
 
   loadUser = (data) => {
-    console.log(">>>>>>>>>>>", data);
     this.setState({user: {
             id: data.id,
             name: data.name,
@@ -35,7 +34,6 @@ class App extends React.Component {
   }
 
   updateEntriesForUser = (entries) => {
-    console.log("ENTRIES ===", entries);
     this.setState({user: {...this.state.user, entries}});
   }
 
@@ -50,9 +48,6 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    fetch('http://localhost:3100')
-      .then(resp => resp.json())
-      .then(console.log);
   }
 
   render () {

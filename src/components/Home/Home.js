@@ -37,7 +37,6 @@ class Home extends React.Component {
     }
 
     displayFaceBox = (boxes) => {
-        console.log("HEYYYYYYYYYYY", boxes)
         this.setState({faceBoxes: boxes});
     }
 
@@ -46,7 +45,7 @@ class Home extends React.Component {
     }
 
     updateEntries = () => {
-        fetch('http://localhost:3100/image', {
+        fetch('https://vast-taiga-63527.herokuapp.com/image', {
             method: 'put',
             headers: {
                 "Content-Type": "application/json",
@@ -65,7 +64,7 @@ class Home extends React.Component {
         console.log("WTCFDFFF", this.state.input);
         this.setState({imageUrl: this.state.input})
 
-        fetch('http://localhost:3100/clarifai/image', {
+        fetch('https://vast-taiga-63527.herokuapp.com:3000/clarifai/image', {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
